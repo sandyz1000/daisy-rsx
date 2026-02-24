@@ -1,138 +1,202 @@
 use dioxus::prelude::*;
-use daisy_rsx::marketing::{
-    benefits::Benefits,
-    customer_logos::{CustomerLogo, CustomersConfigured},
-    faq_accordian::{Faq, FaqText},
-    footer::Footer,
-    image_feature::ImageFeature,
-    navigation::Section,
-    quad_feature::QuadFeature,
-    small_image_feature::SmallImageFeature,
-    split_video_hero::SplitVideoHero,
-    testamonials::Testamonials,
-};
+use daisy_rsx::marketing::{footer::Footer, navigation::Section};
 use ssg_whiz::layouts::layout::Layout;
 
 pub fn page() -> String {
     let page = rsx!(
         Layout {
-            title: "Decision Advantage".to_string(),
-            description: "Agentic military AI for faster, auditable operational decision advantage.".to_string(),
+            title: "Decision Advantage | Command-Ready Judgment".to_string(),
+            description: "Decision Advantage is an agentic decision-support layer that turns fragmented operational data into command-ready judgment for senior leadership.".to_string(),
             mobile_menu: None,
             section: Section::Home,
             main {
-                class: "mx-auto w-full max-w-5xl px-6 pt-32 pb-20 lg:pt-40 grid gap-y-28 lg:gap-y-36",
-                SplitVideoHero {
-                    title: "Speed to decision is a weapons system".to_string(),
-                    subtitle: "Plan, simulate, and adapt in minutes instead of hours.".to_string(),
-                    video_src: "/european_flag.mp4".to_string(),
-                    cta_label: Some("See Demo".to_string()),
-                    cta_href: Some("/contact".to_string()),
+                class: "decision-luxe",
+
+                section {
+                    id: "hero",
+                    class: "dl-wrap",
+
+                    div {
+                        class: "dl-hero",
+                        div {
+                            class: "dl-hero-content",
+                            span { class: "dl-kicker", "Decision Advantage" }
+                            h1 {
+                                class: "dl-headline",
+                                "Agentic Decision Support for"
+                                i { "Command Judgment." }
+                            }
+                            p {
+                                class: "dl-lead",
+                                "A hardened decision layer that coordinates agentic analysis across existing systems to deliver clear, defensible judgment at command tempo."
+                            }
+                            a {
+                                class: "dl-btn",
+                                href: "/contact",
+                                "Schedule a Demo"
+                            }
+                        }
+                    }
+
+                    section {
+                        id: "artifacts",
+                        class: "dl-artifacts dl-shell",
+                        h2 { class: "dl-headline" , style: "font-size:clamp(1.7rem,4.7vw,3.5rem);", "Operational Signals" i { "in Motion" } }
+                        p { class: "dl-lead", "These live artifacts represent how Decision Advantage continuously stabilizes inputs, timing, and context into usable command judgment." }
+                        div {
+                            class: "dl-grid3",
+
+                            article {
+                                class: "dl-card",
+                                h3 { "Diagnostic Shuffler" }
+                                p { "Surfaces the signals that matter by continuously re-framing inputs across operational contexts." }
+                                div {
+                                    id: "diag-stage",
+                                    class: "diag-stage",
+                                    div { class: "diag-item", small { "Priority" } strong { "Operational Constraints" } }
+                                    div { class: "diag-item", small { "Priority" } strong { "Confidence Gaps" } }
+                                    div { class: "diag-item", small { "Priority" } strong { "Decision Risk" } }
+                                }
+                            }
+
+                            article {
+                                class: "dl-card",
+                                h3 { "Telemetry Typewriter" }
+                                p { "Streams live operational context into a readable decision feed-without dashboards or noise." }
+                                div {
+                                    class: "telemetry",
+                                    div { class: "live", span { class: "pulse-dot" } "Live Feed" }
+                                    div {
+                                        code {
+                                            id: "type-line",
+                                            ""
+                                            span { class: "cursor" }
+                                        }
+                                    }
+                                }
+                            }
+
+                            article {
+                                class: "dl-card",
+                                h3 { "Cursor Protocol Scheduler" }
+                                p { "Coordinates decision timing across staff, systems, and command rhythms." }
+                                div {
+                                    id: "scheduler",
+                                    class: "scheduler",
+                                    div { id: "schedule-cursor", class: "schedule-cursor" }
+                                    div {
+                                        class: "schedule-grid",
+                                        div { class: "day-cell", "S" }
+                                        div { class: "day-cell", "M" }
+                                        div { class: "day-cell", "T" }
+                                        div { class: "day-cell", "W" }
+                                        div { class: "day-cell", "T" }
+                                        div { class: "day-cell", "F" }
+                                        div { class: "day-cell", "S" }
+                                    }
+                                    div { class: "save-btn", id: "save-btn", "Right decision. Right moment." }
+                                }
+                            }
+                        }
+                    }
+
+                    section {
+                        id: "manifesto",
+                        class: "dl-manifesto",
+                        div { class: "dl-parallax", id: "parallax" }
+                        div {
+                            class: "dl-manifesto-content",
+                            p { "Most systems focus on collecting more data, adding more dashboards, and accelerating raw output." }
+                            h2 {
+                                class: "contrast",
+                                "We focus on"
+                                em { " decision integrity under pressure" }
+                            }
+                            p {
+                                "Decision Advantage exists to support senior leaders operating under time compression and consequence. It does not replace systems or issue recommendations-it coordinates agentic decision support that strengthens judgment when clarity matters most."
+                            }
+                        }
+                    }
+
+                    section {
+                        id: "protocol",
+                        class: "dl-protocol-wrap dl-shell",
+                        h2 { class: "dl-headline", style: "font-size:clamp(1.8rem,4.8vw,3.7rem);margin:1rem auto 0.5rem;text-align:center;", "Operational Decision" i { "Protocol" } }
+                        p { class: "dl-lead", style: "margin:0 auto 1.6rem;text-align:center;", "A disciplined approach to stabilizing judgment without disrupting command systems." }
+                        div {
+                            class: "protocol-stack",
+
+                            article {
+                                class: "protocol-card",
+                                id: "protocol-card-1",
+                                div {
+                                    span { class: "protocol-step", "Step 01" }
+                                    h3 { class: "protocol-title", "Ingest" em { " Without Disruption" } }
+                                    p { class: "protocol-desc", "Connects to existing operational systems without re-architecture. No workflow breakage. No retraining." }
+                                }
+                                div {
+                                    class: "viz",
+                                    div { class: "rotor" }
+                                }
+                            }
+
+                            article {
+                                class: "protocol-card",
+                                id: "protocol-card-2",
+                                div {
+                                    span { class: "protocol-step", "Step 02" }
+                                    h3 { class: "protocol-title", "Stabilize" em { " the Decision Frame" } }
+                                    p { class: "protocol-desc", "Normalizes fragmented inputs into a single, defensible context senior leaders can trust." }
+                                }
+                                div {
+                                    class: "viz",
+                                    div { class: "scan-grid" }
+                                    div { class: "scan-line" }
+                                }
+                            }
+
+                            article {
+                                class: "protocol-card",
+                                id: "protocol-card-3",
+                                div {
+                                    span { class: "protocol-step", "Step 03" }
+                                    h3 { class: "protocol-title", "Deliver" em { " Command Judgment" } }
+                                    p { class: "protocol-desc", "Outputs clear decision posture-not recommendations-aligned to leadership intent and timing." }
+                                }
+                                div {
+                                    class: "viz",
+                                    svg {
+                                        class: "wave",
+                                        view_box: "0 0 320 110",
+                                        path {
+                                            d: "M0 56 C22 56, 24 30, 46 30 C68 30, 70 80, 95 80 C120 80, 122 52, 144 52 C166 52, 168 92, 190 92 C212 92, 216 40, 238 40 C260 40, 262 70, 285 70 C305 70, 306 56, 320 56"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    section {
+                        class: "dl-cta",
+                        h2 { "Experience Decision Advantage." }
+                        p { "Schedule a strategic demonstration focused on senior command decision-making." }
+                        a {
+                            class: "dl-btn",
+                            href: "/contact",
+                            "Schedule a Demo"
+                        }
+                    }
                 }
 
-                CustomersConfigured {
-                    title: "Trusted by allied innovation teams".to_string(),
-                    logos: vec![
-                        CustomerLogo {
-                            src: "/customer-logos/logo-1.svg".to_string(),
-                            alt: "Customer logo one".to_string(),
-                        },
-                        CustomerLogo {
-                            src: "/customer-logos/logo-2.svg".to_string(),
-                            alt: "Customer logo two".to_string(),
-                        },
-                        CustomerLogo {
-                            src: "/customer-logos/logo-3.svg".to_string(),
-                            alt: "Customer logo three".to_string(),
-                        },
-                    ],
+                Footer {
+                    margin_top: Some("mt-0".to_string()),
+                    links: crate::ui_links::footer_links(),
                 }
 
-                SmallImageFeature {
-                    title: "Operational Tempo".to_string(),
-                    sub_title: "From fragmented intel to coordinated action".to_string(),
-                    text: "Operational teams lose tempo when intelligence, planning, and execution tools are disconnected across domains and classifications. Decision Advantage summarizes context, proposes COAs, and keeps commanders in the loop with explainable outputs.".to_string(),
-                    image: "https://placehold.co/1024x768/0A2A66/FFFFFF?text=Joint+Ops+Picture".to_string(),
-                    flip: true,
+                script {
+                    dangerous_inner_html: include_str!("index_luxe.js")
                 }
-
-                SmallImageFeature {
-                    title: "Mission Planning".to_string(),
-                    sub_title: "Generate COAs with transparent assumptions".to_string(),
-                    text: "AI agents continuously evaluate constraints, resources, and adversary posture to propose actionable courses of action with confidence scoring.".to_string(),
-                    image: "https://placehold.co/960x640/123D8D/FFFFFF?text=COA+Generator".to_string(),
-                    flip: false,
-                }
-
-                SmallImageFeature {
-                    title: "Cross-Domain Data".to_string(),
-                    sub_title: "Fuse ISR, cyber, logistics, and HUMINT".to_string(),
-                    text: "Unify structured and unstructured data into a single operational view that is queryable by commanders and staff in natural language.".to_string(),
-                    image: "https://placehold.co/960x640/0F347C/FFFFFF?text=Data+Fusion".to_string(),
-                    flip: true,
-                }
-
-                ImageFeature {
-                    title: "Command Timeline & Scenario Replay".to_string(),
-                    sub_title: "Understand why decisions were made and how outcomes evolved".to_string(),
-                    image: "https://placehold.co/1280x720/1B4B9B/FFFFFF?text=Timeline+Replay".to_string(),
-                }
-
-                QuadFeature {
-                    title: "Core Capabilities".to_string(),
-                    sub_title: "Built for contested, data-dense environments".to_string(),
-                    text: "Decision Advantage turns information overload into prioritized, explainable actions for military operators.".to_string(),
-                    title1: "Human-on-the-loop".to_string(),
-                    text1: "Operators approve every high-impact action with full provenance.".to_string(),
-                    title2: "Secure by Design".to_string(),
-                    text2: "Deploy in controlled environments with auditable model and data access.".to_string(),
-                    title3: "Continuous Adaptation".to_string(),
-                    text3: "Agents re-plan as mission context and threat indicators change.".to_string(),
-                    title4: "After-Action Intelligence".to_string(),
-                    text4: "Replay decisions, capture lessons learned, and improve doctrine.".to_string(),
-                }
-
-                Benefits {
-                    title: "Outcomes".to_string(),
-                    subtitle: "Operational benefits you can measure".to_string(),
-                    benefit1: "Faster OODA loops".to_string(),
-                    benefit1_desc: "Shorten observe-orient-decide-act cycles with realtime, context-aware recommendations.".to_string(),
-                    benefit2: "Higher decision quality".to_string(),
-                    benefit2_desc: "Improve consistency with explainable AI support and validated planning templates.".to_string(),
-                    benefit3: "Mission assurance".to_string(),
-                    benefit3_desc: "Maintain traceability, policy alignment, and post-mission audit records.".to_string(),
-                }
-
-                Testamonials {
-                    text1: "Decision Advantage reduced our planning cycle by over 40% while preserving command authority and discipline.",
-                    job1: "Joint Task Force Operations Lead",
-                    person1: "A. Commander",
-                    img1: "https://placehold.co/96x96/001741/FFFFFF?text=AC",
-                    text2: "We now run scenario branches in parallel and brief leadership with evidence-backed COAs in near real time.",
-                    job2: "Defense Analytics Director",
-                    person2: "R. Analyst",
-                    img2: "https://placehold.co/96x96/0A2A66/FFFFFF?text=RA",
-                }
-
-                Faq {
-                    questions: vec![
-                        FaqText {
-                            question: "Does this replace commanders?".to_string(),
-                            answer: "No. The platform is designed for human command authority, with AI providing recommendations and decision support.".to_string(),
-                        },
-                        FaqText {
-                            question: "Can it run in sovereign or on-prem environments?".to_string(),
-                            answer: "Yes. Decision Advantage can be deployed in controlled environments to meet operational and sovereignty constraints.".to_string(),
-                        },
-                        FaqText {
-                            question: "How do we trust model outputs?".to_string(),
-                            answer: "Every recommendation includes traceable sources, assumptions, and confidence signals for operator validation.".to_string(),
-                        },
-                    ],
-                }
-            }
-            Footer {
-                links: crate::ui_links::footer_links()
             }
         }
     );
