@@ -1,8 +1,10 @@
 use dioxus::prelude::*;
 
 use super::layout::Layout;
-use crate::{page_permalink, summaries::{Category, PageSummary, Summary}};
-use daisy_rsx::marketing::navigation::Section;
+use crate::{
+    Section, page_permalink,
+    summaries::{Category, PageSummary, Summary},
+};
 
 #[component]
 pub fn Document(
@@ -24,7 +26,7 @@ pub fn Document(
                 class: "flex-1",
 
                 div {
-                    class: "flex flex-row relative",
+                    class: "relative flex flex-row",
                     LeftNav {
                         summary: summary.clone(),
                         active_folder: doc.folder,
@@ -61,7 +63,7 @@ pub fn Document(
 fn MobileMenu(summary: Summary) -> Element {
     rsx! {
         for category in &summary.categories {
-            ul {
+            ul { class: "menu menu-sm gap-1",
                 for page in &category.pages {
                     li {
                         a {
@@ -79,16 +81,16 @@ fn MobileMenu(summary: Summary) -> Element {
 fn LeftNav(summary: Summary, active_folder: &'static str, scroll_key: &'static str) -> Element {
     rsx! {
         div {
-            class: "fixed z-40 lg:z-auto w-0 -left-full lg:w-[420px] !lg:left-0 lg:sticky h-[calc(100vh-108px)] top-2 bottom-0 flex flex-col ml-0 border-r lg:overflow-y-auto",
+            class: "fixed top-2.5 bottom-0 left-[-100%] z-40 hidden h-[calc(100vh-108px)] w-[420px] shrink-0 overflow-y-auto border-r border-base-300 bg-base-100 lg:sticky lg:left-0 lg:block",
             "data-scroll-key": scroll_key,
             nav {
-                class: "pt-12 p-5",
+                class: "px-5 pt-12 pb-5",
                 for category in &summary.categories {
                     p {
                         class: format!(
-                            "font-semibold mb-2 {}",
+                            "mb-2 font-semibold{}",
                             if category.name.contains("Coming Soon") {
-                                "opacity-60"
+                                " opacity-60"
                             } else {
                                 ""
                             }
@@ -96,20 +98,19 @@ fn LeftNav(summary: Summary, active_folder: &'static str, scroll_key: &'static s
                         "{category.name}"
                     }
                     ul {
-                        class: "mb-6",
+                        class: "menu mb-6 p-0",
                         for page in &category.pages {
                             li {
-                                class: "mb-2",
                                 a {
                                     class: format!(
-                                        "rounded-md hover:text-sky-500 dark:hover:text-sky-400 {} {}",
+                                        "{}{}",
                                         if page.folder == active_folder && !category.name.contains("Coming Soon") {
-                                            "text-primary font-semibold border-b-2 border-primary pb-[2px]"
+                                            "active"
                                         } else {
                                             ""
                                         },
                                         if category.name.contains("Coming Soon") {
-                                            "opacity-50 pointer-events-none cursor-not-allowed"
+                                            " pointer-events-none cursor-not-allowed opacity-50"
                                         } else {
                                             ""
                                         }
@@ -134,12 +135,13 @@ fn Content(doc: PageSummary) -> Element {
     let content = crate::markdown::markdown_to_html(doc.markdown);
     rsx! {
         section {
-            class: "p-5 pt-12 w-full h-[calc(100vh-108px)] lg:overflow-y-auto",
+            class: "h-[calc(100vh-108px)] w-full px-5 pt-12 pb-5 lg:overflow-y-auto",
             div {
                 class: "mb-12",
                 article {
-                    class: "mx-auto prose",
+                    class: "mt-24 mx-auto prose max-w-prose px-5 lg:prose-xl",
                     div {
+                        class: "prose prose-slate max-w-none prose-pre:overflow-x-auto prose-pre:rounded-xl prose-pre:bg-slate-100 prose-code:font-mono prose-img:max-w-full",
                         dangerous_inner_html: "{content}"
                     }
                 }

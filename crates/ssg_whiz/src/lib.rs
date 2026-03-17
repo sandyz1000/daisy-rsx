@@ -5,37 +5,40 @@ use std::path::{Path, PathBuf};
 use std::sync::OnceLock;
 
 use axum::Router;
-use daisy_rsx::marketing::{
-    footer::FooterLinks,
-    navigation::{NavigationModel, Section},
-    site_header::SiteHeader,
-};
 use dioxus::prelude::*;
 use tower_http::services::ServeDir;
 use tower_livereload::LiveReloadLayer;
 
 use layouts::{BlogList, BlogPost, Document, MarkdownPage};
-use summaries::{BlogSummary, DocumentSite, PagesSummary, Summary};
+use summaries::{BlogSummary, PagesSummary, Summary};
 
+pub mod builder;
 pub mod layouts;
 pub mod markdown;
+pub mod marketing;
 pub mod summaries;
-pub mod builder;
 
 pub use builder::SiteBuilder;
+pub use marketing::extra_footer::{ExtraFooter, ExtraFooterConfig};
+pub use marketing::footer::{Footer, FooterLinks};
+pub use marketing::navigation::{
+    Navigation, NavigationEntry, NavigationLink, NavigationMenu, NavigationModel, Section,
+};
+pub use marketing::site_header::SiteHeader;
+pub use summaries::DocumentSite;
 
 static NAV_LINKS: OnceLock<NavigationModel> = OnceLock::new();
 static SITE_META: OnceLock<SiteMeta> = OnceLock::new();
 static SITE_HEADER_FACTORY: OnceLock<Option<SiteHeaderFactory>> = OnceLock::new();
+static SITE_ASSETS: OnceLock<SiteAssets> = OnceLock::new();
+static EXTRA_FOOTER: OnceLock<Option<ExtraFooterConfig>> = OnceLock::new();
 
 pub fn set_navigation_links(links: NavigationModel) {
     let _ = NAV_LINKS.set(links);
 }
 
 pub(crate) fn navigation_links() -> &'static NavigationModel {
-    NAV_LINKS
-        .get()
-        .expect("ssg_whiz navigation links not set")
+    NAV_LINKS.get().expect("ssg_whiz navigation links not set")
 }
 
 #[derive(Clone, Debug)]
@@ -62,6 +65,67 @@ pub fn set_site_header(factory: Option<SiteHeaderFactory>) {
 
 pub(crate) fn site_header_factory() -> Option<SiteHeaderFactory> {
     SITE_HEADER_FACTORY.get().cloned().unwrap_or(None)
+}
+
+#[derive(Clone, Debug, Default)]
+pub struct SiteAssets {
+    pub stylesheets: Vec<String>,
+    pub head_scripts: Vec<ScriptAsset>,
+    pub body_scripts: Vec<ScriptAsset>,
+    pub head_inline_scripts: Vec<InlineScript>,
+    pub body_inline_scripts: Vec<InlineScript>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ScriptAsset {
+    pub src: String,
+    pub script_type: Option<String>,
+    pub async_load: bool,
+    pub integrity: Option<String>,
+    pub data_goatcounter: Option<String>,
+}
+
+impl ScriptAsset {
+    pub fn new(src: impl Into<String>) -> Self {
+        Self {
+            src: src.into(),
+            script_type: None,
+            async_load: false,
+            integrity: None,
+            data_goatcounter: None,
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct InlineScript {
+    pub code: String,
+    pub script_type: Option<String>,
+}
+
+impl InlineScript {
+    pub fn new(code: impl Into<String>) -> Self {
+        Self {
+            code: code.into(),
+            script_type: None,
+        }
+    }
+}
+
+pub fn set_site_assets(assets: SiteAssets) {
+    let _ = SITE_ASSETS.set(assets);
+}
+
+pub(crate) fn site_assets() -> &'static SiteAssets {
+    SITE_ASSETS.get().expect("ssg_whiz site assets not set")
+}
+
+pub fn set_extra_footer(extra_footer: Option<ExtraFooterConfig>) {
+    let _ = EXTRA_FOOTER.set(extra_footer);
+}
+
+pub(crate) fn extra_footer() -> Option<ExtraFooterConfig> {
+    EXTRA_FOOTER.get().cloned().unwrap_or(None)
 }
 
 pub fn absolute_url(value: &str) -> String {
@@ -91,6 +155,8 @@ pub struct SiteConfig {
     pub footer_links: FooterLinks,
     pub site_meta: SiteMeta,
     pub site_header: Option<SiteHeaderFactory>,
+    pub site_assets: SiteAssets,
+    pub extra_footer: Option<ExtraFooterConfig>,
 }
 
 impl Default for SiteConfig {
@@ -115,7 +181,6 @@ impl Default for SiteConfig {
                 terms: "/terms".to_string(),
                 privacy: "/privacy".to_string(),
                 about: None,
-                variant: None,
             },
             site_meta: SiteMeta {
                 base_url: "https://bionic-gpt.com".to_string(),
@@ -124,6 +189,48 @@ impl Default for SiteConfig {
                 goatcounter: "https://bionicgpt.goatcounter.com/count".to_string(),
             },
             site_header: None,
+            site_assets: SiteAssets {
+                stylesheets: vec!["/tailwind.css".to_string()],
+                head_scripts: vec![
+                    ScriptAsset {
+                        src: "/goat-counter.js".to_string(),
+                        script_type: None,
+                        async_load: true,
+                        integrity: None,
+                        data_goatcounter: Some(
+                            "https://bionicgpt.goatcounter.com/count".to_string(),
+                        ),
+                    },
+                    ScriptAsset {
+                        src: "/copy-paste.js".to_string(),
+                        script_type: None,
+                        async_load: true,
+                        integrity: None,
+                        data_goatcounter: None,
+                    },
+                    ScriptAsset {
+                        src: "https://cdn.jsdelivr.net/npm/@justinribeiro/lite-youtube@1/lite-youtube.min.js"
+                            .to_string(),
+                        script_type: Some("module".to_string()),
+                        async_load: false,
+                        integrity: None,
+                        data_goatcounter: None,
+                    },
+                ],
+                body_scripts: vec![ScriptAsset {
+                    src: "https://instant.page/5.2.0".to_string(),
+                    script_type: Some("module".to_string()),
+                    async_load: false,
+                    integrity: Some(
+                        "sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z"
+                            .to_string(),
+                    ),
+                    data_goatcounter: None,
+                }],
+                head_inline_scripts: vec![],
+                body_inline_scripts: vec![],
+            },
+            extra_footer: None,
         }
     }
 }
@@ -149,6 +256,8 @@ pub async fn generate_website(
     set_navigation_links(config.navigation_links.clone());
     set_site_meta(config.site_meta.clone());
     set_site_header(config.site_header);
+    set_site_assets(config.site_assets.clone());
+    set_extra_footer(config.extra_footer.clone());
 
     let mut pages = input.static_pages;
     pages.extend(render_blog_posts(&input.blog, config.footer_links.clone()));
@@ -158,7 +267,10 @@ pub async fn generate_website(
         pages.extend(render_document_site(&doc_site.summary, doc_site.section));
     }
 
-    pages.extend(render_pages_summary(&input.pages, config.footer_links.clone()));
+    pages.extend(render_pages_summary(
+        &input.pages,
+        config.footer_links.clone(),
+    ));
 
     generate_site(config, pages).await
 }

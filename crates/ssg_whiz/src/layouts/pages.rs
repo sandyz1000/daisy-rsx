@@ -1,6 +1,5 @@
 use super::layout::Layout;
-use crate::{page_permalink, summaries::PageSummary};
-use daisy_rsx::marketing::{footer::{Footer, FooterLinks}, navigation::Section};
+use crate::{Footer, FooterLinks, Section, page_permalink, summaries::PageSummary};
 use dioxus::prelude::*;
 
 #[component]
@@ -13,9 +12,9 @@ pub fn MarkdownPage(post: PageSummary, footer_links: FooterLinks) -> Element {
             url: Some(page_permalink(post.folder)),
             section: Section::None,
             article {
-                class: "mx-auto max-w-2xl p-5",
+                class: "mt-24 mx-auto prose max-w-prose px-5 lg:prose-xl",
                 div {
-                    class: "prose",
+                    class: "prose prose-slate max-w-none prose-pre:overflow-x-auto prose-pre:rounded-xl prose-pre:bg-slate-100 prose-code:font-mono prose-img:max-w-full",
                     dangerous_inner_html: "{content}"
                 }
             }

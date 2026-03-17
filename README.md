@@ -176,17 +176,13 @@ pub fn MyAssistantCard(team_id: i32, prompt: MyPrompt) -> Element {
 
 ## To Create a Release
 
-Release publishing is handled by the GitHub Actions workflow in `.github/workflows/release.yml`. The workflow runs when a tag that starts with `v` (for example, `v0.1.48`) is pushed and will:
-
-- Ensure the tag version matches `Cargo.toml`.
-- Run the test suite.
-- Publish the crate to crates.io using `secrets.CARGO_REGISTRY_TOKEN`.
-
-A typical release flow using [`cargo-release`](https://github.com/crate-ci/cargo-release) looks like this:
+Release publishing is handled locally with [`cargo-release`](https://github.com/crate-ci/cargo-release).
+The usual flow is:
 
 ```sh
 cargo install cargo-release
-cargo release patch
+cargo release patch -p daisy_rsx
+cargo release patch -p ssg_whiz
 ```
 
 The command above performs a dry run. When you are ready to publish, run:
@@ -195,7 +191,11 @@ The command above performs a dry run. When you are ready to publish, run:
 set -a
 source .env
 set +a
-cargo release patch --execute
+cargo release patch -p daisy_rsx --execute
+cargo release patch -p ssg_whiz --execute
 ```
 
-`cargo-release` will bump the version, create a matching `v*` tag, push the changes, and trigger the release workflow.
+The `source .env` step loads your local release environment, including `CARGO_REGISTRY_TOKEN`,
+so `cargo-release` can publish to crates.io when `--execute` is used.
+
+`cargo-release` will bump the version, create a matching tag, push the changes, and publish the crate.
